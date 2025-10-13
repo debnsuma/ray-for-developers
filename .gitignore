@@ -1,0 +1,169 @@
+# Ray for Developers - Repository .gitignore
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# ============================================================================
+# Virtual Environments
+# ============================================================================
+.venv/
+venv/
+ENV/
+env/
+.env
+
+# ============================================================================
+# IDEs and Editors
+# ============================================================================
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ============================================================================
+# OS Files
+# ============================================================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ============================================================================
+# Jupyter Notebooks
+# ============================================================================
+.ipynb_checkpoints/
+# Note: Keep tracked notebooks, ignore only checkpoints
+
+# ============================================================================
+# Ray
+# ============================================================================
+/tmp/ray/
+ray_results/
+.ray/
+
+# ============================================================================
+# Model Weights and Checkpoints
+# ============================================================================
+models/weights/
+*.pth
+*.pt
+*.ckpt
+*.h5
+*.pb
+
+# ============================================================================
+# Logs and Temporary Files
+# ============================================================================
+*.log
+logs/
+*.tmp
+*.temp
+temp/
+tmp/
+
+# ============================================================================
+# Test and Coverage
+# ============================================================================
+.coverage
+.pytest_cache/
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+.hypothesis/
+
+# ============================================================================
+# Documentation Build
+# ============================================================================
+docs/_build/
+site/
+
+# ============================================================================
+# Secrets and Config
+# ============================================================================
+.env
+.env.local
+secrets.json
+config.local.json
+
+# ============================================================================
+# Project-Specific: Video Highlight Generator
+# ============================================================================
+
+# Raw video files (large downloads)
+03-multimodal-data-processing/video-highlight-generator/data/raw/demo/*.mp4
+03-multimodal-data-processing/video-highlight-generator/data/raw/demo/*.avi
+03-multimodal-data-processing/video-highlight-generator/data/raw/demo/*.mov
+03-multimodal-data-processing/video-highlight-generator/data/raw/demo/*.mkv
+03-multimodal-data-processing/video-highlight-generator/data/raw/youtube/
+03-multimodal-data-processing/video-highlight-generator/data/raw/youtube_test/
+
+# Processed videos and frames
+03-multimodal-data-processing/video-highlight-generator/data/processed/**/*
+!03-multimodal-data-processing/video-highlight-generator/data/processed/**/.gitkeep
+
+# Pipeline outputs (intermediate and final)
+03-multimodal-data-processing/video-highlight-generator/data/pipeline/**/*
+!03-multimodal-data-processing/video-highlight-generator/data/pipeline/**/.gitkeep
+
+# Output directory
+03-multimodal-data-processing/video-highlight-generator/data/output/**/*
+!03-multimodal-data-processing/video-highlight-generator/data/output/**/.gitkeep
+
+# Generated features and highlights
+03-multimodal-data-processing/video-highlight-generator/data/features/**/*
+!03-multimodal-data-processing/video-highlight-generator/data/features/**/.gitkeep
+03-multimodal-data-processing/video-highlight-generator/data/highlights/**/*
+!03-multimodal-data-processing/video-highlight-generator/data/highlights/**/.gitkeep
+
+# FFmpeg Temporary Files
+*.concat.txt
+concat_*.txt
+ffmpeg*.log
+
+# Gradio / Web Interface
+gradio_videos/
+gradio_outputs/
+flagged/
+
+# ============================================================================
+# Keep Important Files
+# ============================================================================
+# Ensure these are tracked
+!.gitkeep
+!README.md
+!requirements.txt
+!pyproject.toml
+
+# Ignore the recordings directory
+recordings/
+!recordings/.gitkeep

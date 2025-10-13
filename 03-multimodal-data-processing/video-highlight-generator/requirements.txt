@@ -1,0 +1,38 @@
+# Core dependencies for M4 MacBook Pro development
+# Python 3.12 required
+
+# Ray framework
+ray[default,data]==2.39.0
+
+# PyTorch with MPS support (M4)
+torch==2.5.1
+torchvision==0.20.1
+
+# Video processing
+opencv-python==4.10.0.84
+av==13.1.0
+
+# Audio processing
+librosa==0.10.2
+soundfile==0.12.1
+
+# ML models
+transformers==4.46.3
+timm==1.0.11
+
+# Scientific computing
+numpy==1.26.4
+scipy==1.14.1
+
+# Utilities
+pillow==10.4.0
+tqdm==4.66.5
+pyyaml==6.0.2
+
+# Development
+jupyter==1.1.1
+ipywidgets==8.1.5
+matplotlib==3.9.2
+
+# Web interface
+gradio==4.44.0
