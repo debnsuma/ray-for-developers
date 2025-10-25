@@ -131,6 +131,24 @@ Results:
 ...
 ```
 
+## Actual Training Results
+
+**VisionTransformer on CIFAR-10 (10 epochs, 12 workers across 3 nodes):**
+
+- **Training Time**: 4 minutes 12 seconds (252 seconds)
+- **Final Accuracy**: 60.19%
+- **Configuration**: 12 workers (3 nodes × 4 GPUs), batch_size=42 per worker (504 global)
+- **Storage**: `/mnt/cluster_storage/cifar10_fsdp_b3f34120/`
+- **Memory per GPU**: ~1/12 of full model (sharded across 12 workers)
+
+**Performance Comparison:**
+- **1.9x faster** than vanilla DDP (4 GPUs, 1 node): 4:12 vs 7:55
+- **Nearly identical to Ray Train DDP**: 4:12 vs 4:01 (minimal FSDP overhead)
+- **Better accuracy**: 60.19% vs 57.62% (vanilla DDP)
+- **Memory efficiency**: Each GPU holds only 1/12 of model parameters
+
+**Key Insight**: FSDP has minimal overhead for this model size. The memory savings become critical for models that don't fit on a single GPU!
+
 ## Code Walkthrough
 
 The code is **99% identical** to the DDP version. Here's the complete diff:

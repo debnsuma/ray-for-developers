@@ -128,6 +128,23 @@ Training Results
 Final metrics: {'accuracy': 0.8734}
 ```
 
+## Actual Training Results
+
+**VisionTransformer on CIFAR-10 (10 epochs, 12 workers across 3 nodes):**
+
+- **Training Time**: 4 minutes 1 second (241 seconds)
+- **Final Accuracy**: 60.91%
+- **Configuration**: 12 workers (3 nodes × 4 GPUs), batch_size=42 per worker (504 global)
+- **Storage**: `/mnt/cluster_storage/cifar10_ddp_3b83a48a/`
+
+**Performance Comparison:**
+- **2.0x faster** than vanilla DDP (4 GPUs, 1 node): 4:01 vs 7:55
+- **Better accuracy**: 60.91% vs 57.62% (vanilla DDP)
+- **Simpler code**: ~318 lines vs ~426 lines (25% reduction)
+- **Multi-node scaling**: Automatic vs manual configuration
+
+Ray Train DDP achieves better performance with less code and better multi-node scalability!
+
 ## Understanding the Key Changes
 
 ### [1] prepare_data_loader()

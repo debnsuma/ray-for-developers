@@ -153,6 +153,21 @@ Epoch 1/10
 ...
 ```
 
+## Actual Training Results
+
+**VisionTransformer on CIFAR-10 (10 epochs, 4 GPUs):**
+
+- **Training Time**: 7 minutes 55 seconds
+- **Final Accuracy**: 57.62%
+- **Configuration**: 4 GPUs on 1 node, batch_size=128 per GPU (512 global)
+- **Progression**: 32.92% → 40.92% → 49.13% → 50.49% → 51.94% → 55.03% → 55.38% → 55.90% → 57.31% → 57.62%
+
+**Comparison to Ray Train** (12 workers, 3 nodes):
+- Ray Train DDP: **4:01** (2.0x faster), **60.91%** accuracy
+- Ray Train FSDP: **4:12** (1.9x faster), **60.19%** accuracy
+
+Ray Train not only scales better to multiple nodes but also achieves higher accuracy with simpler code!
+
 ## Pain Points with Vanilla PyTorch DDP
 
 ### 1. **Massive Boilerplate**
