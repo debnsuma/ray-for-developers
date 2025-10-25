@@ -28,16 +28,20 @@ Start here if you're new to Ray. Learn the core concepts, architecture, and buil
 - Debugging and monitoring
 
 ### [02. Distributed Training](./02-distributed-training/)
-Master distributed training for deep learning models at scale, including post-training techniques.
+Master distributed training for deep learning models at scale - from PyTorch DDP to FSDP.
+
+**🚀 Complete Learning Path:**
+- **Vanilla PyTorch DDP** - See the pain points of manual distributed training
+- **Ray Train DDP** - Eliminate 90% of boilerplate with 3 simple changes
+- **Ray Train FSDP** - Scale to large models with 1 parameter change
+- Side-by-side comparison showing Ray's advantages
 
 **Topics covered:**
-- Distributed data parallel training
-- Model parallel training (pipeline, tensor parallelism)
-- Ray Train integration with PyTorch, TensorFlow, and JAX
-- Hyperparameter tuning with Ray Tune
-- Post-training: RLHF, DPO, and fine-tuning strategies
-- Distributed checkpointing and fault tolerance
-- Multi-node GPU training
+- Data Parallel (DDP) vs Fully Sharded Data Parallel (FSDP)
+- Ray Train integration with PyTorch (same model: VisionTransformer on CIFAR-10)
+- Automatic resource management and fault tolerance
+- Multi-node GPU training with shared storage
+- When to use DDP vs FSDP for your models
 
 ### [03. Multimodal Data Processing](./03-multimodal-data-processing/)
 Process large-scale multimodal datasets efficiently with Ray Data.

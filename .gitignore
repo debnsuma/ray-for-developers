@@ -167,3 +167,21 @@ flagged/
 # Ignore the recordings directory
 recordings/
 !recordings/.gitkeep
+
+# ============================================================================
+# Project-Specific: Distributed Training
+# ============================================================================
+
+# Downloaded datasets (CIFAR-10, etc.)
+02-distributed-training/**/data/
+02-distributed-training/**/*.lock
+~/data/
+
+# Training outputs
+02-distributed-training/**/*.pth
+02-distributed-training/**/checkpoint_*.pth
+02-distributed-training/**/ray_results/
+02-distributed-training/**/.ray/
+
+# Temporary Python cache
+02-distributed-training/**/__pycache__/
