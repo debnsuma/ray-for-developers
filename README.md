@@ -15,8 +15,6 @@
 
 ---
 
-![](./imgs/ray_header_logo.png)
-
 ## Table of Contents
 
 - [Overview](#overview)
@@ -39,6 +37,8 @@
 This repository provides a **comprehensive hands-on guide** to building scalable distributed applications with Ray, a unified framework for scaling AI and Python applications. Whether you're training large language models, processing terabytes of data, or deploying ML models at scale, Ray simplifies distributed computing by abstracting away the complexity of cluster management and parallelization.
 
 Through practical examples and production-ready code, you'll master distributed training techniques (from Data Parallel to Fully Sharded Data Parallel), learn to process multimodal datasets efficiently, deploy models for inference at scale, and implement reinforcement learning algorithms. Each module is designed to take you from fundamentals to advanced topics with real-world projects that you can adapt for your own use cases.
+
+![](./imgs/ray_header_logo.png)
 
 ## Who Is This For?
 
