@@ -212,28 +212,6 @@ python -c "import ray; ray.init(); print(f'Ray version: {ray.__version__}')"
 python -c "import torch; print(f'PyTorch version: {torch.__version__}'); print(f'CUDA available: {torch.cuda.is_available()}')"
 ```
 
-### Quick Start
-
-1. Start with [Ray Fundamentals](./01-ray-fundamentals/) to learn the basics
-
-2. Follow along with code examples and exercises in each section
-
-3. Run the examples:
-```bash
-cd 01-ray-fundamentals
-python examples/01_hello_ray.py
-```
-
-## Examples
-
-The [examples](./examples/) directory contains complete end-to-end projects demonstrating real-world applications:
-
-- **Image Classification with Distributed Training** - Train computer vision models across multiple GPUs using Ray Train with automatic data parallelism
-- **LLM Fine-tuning Pipeline** - End-to-end pipeline for fine-tuning large language models with distributed training and checkpointing
-- **Real-time Video Processing** - Process video streams in real-time using Ray's distributed computing capabilities
-- **Multi-model Serving System** - Deploy and serve multiple ML models simultaneously with load balancing and autoscaling
-- **RL-based Recommendation System** - Build a recommendation system using reinforcement learning with Ray RLlib
-
 ## Contributing
 
 Contributions are welcome and greatly appreciated! Here's how you can help improve this project:
