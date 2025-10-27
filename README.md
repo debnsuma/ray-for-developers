@@ -154,8 +154,7 @@ ray-for-developers/
 ├── 03-multimodal-data-processing/ # Data pipelines
 ├── 04-inference/                  # Model serving
 ├── 05-reinforcement-learning/     # RL with Ray
-├── examples/                      # End-to-end examples
-└── assets/                        # Images and resources
+└── imgs/                        # Images and resources
 ```
 
 ## Getting Started
