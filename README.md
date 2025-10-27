@@ -48,27 +48,6 @@ Through practical examples and production-ready code, you'll master distributed 
 - **AI researchers** implementing reinforcement learning algorithms and experimenting with distributed training
 - **Anyone** looking to leverage Ray for production workloads at scale
 
-## Key Features
-
-**Comprehensive Learning Modules**
-This repository includes five complete learning modules covering Ray fundamentals, distributed training, multimodal data processing, inference serving, and reinforcement learning. Each module progresses from basic concepts to advanced implementations with real-world examples.
-
-**Production-Ready Code Examples**
-All code examples are designed for production use, including the Video Highlight Generator project which demonstrates end-to-end distributed video processing with Ray. Examples include error handling, logging, checkpointing, and best practices for deployment.
-
-**Side-by-Side Comparisons**
-See direct comparisons between vanilla PyTorch DDP and Ray Train implementations. Understand exactly how Ray simplifies distributed training by eliminating approximately 90% of boilerplate code while maintaining identical performance characteristics.
-
-**Visual Learning Aids**
-GPU utilization visualizations using nvitop and Ray Dashboard screenshots help you understand resource usage patterns and distributed training behavior. The repository includes architecture diagrams showing how Ray integrates with popular frameworks and cloud platforms.
-
-**Advanced Configuration Examples**
-Learn advanced techniques including FSDP with CPU offloading for memory-efficient training, mixed precision training for faster computation, memory profiling for optimization, and multi-node training configurations for production scale.
-
-**Practical Tools and Scripts**
-Working code that you can adapt for your own projects, including training scripts, data processing pipelines, monitoring tools, and deployment configurations. All examples include comprehensive documentation and usage instructions.
-
----
 
 ## Learning Paths
 
