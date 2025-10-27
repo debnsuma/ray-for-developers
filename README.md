@@ -1,22 +1,55 @@
 # Ray for Developers
 
-Welcome to **Ray for Developers** - your comprehensive guide to building scalable distributed applications, training large models, processing multimodal data, serving inference workloads, and implementing reinforcement learning systems using [Ray](https://www.ray.io/).
+> A comprehensive hands-on guide to building production-grade distributed applications with Ray - from distributed training and multimodal data processing to inference and reinforcement learning.
 
-## About This Repository
+[![Ray Version](https://img.shields.io/badge/Ray-2.39.0-blue.svg)](https://docs.ray.io/)
+[![Python Version](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.5.1-orange.svg)](https://pytorch.org/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-This repository serves as a hands-on learning resource for developers who want to master Ray for production-grade distributed computing. Whether you're building ML pipelines, training foundation models, or scaling data processing workloads, this guide will take you from fundamentals to advanced use cases.
+**Topics:** `distributed-computing` `machine-learning` `deep-learning` `pytorch` `ray` `distributed-training` `ddp` `fsdp` `multimodal` `reinforcement-learning` `mlops` `data-processing` `model-serving`
+
+---
+
+![](./imgs/ray_header_logo.png)
+
+## 📚 Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Learning Paths](#learning-paths)
+  - [01. Ray Fundamentals](#01-ray-fundamentals)
+  - [02. Distributed Training](#02-distributed-training)
+  - [03. Multimodal Data Processing](#03-multimodal-data-processing)
+  - [04. Inference](#04-inference)
+  - [05. Reinforcement Learning](#05-reinforcement-learning)
+- [Quick Start](#quick-start)
+- [Examples](#examples)
+- [Contributing](#contributing)
+- [Resources](#resources)
+
+---
+
+## Overview
+
+This repository is your **comprehensive hands-on guide** to building scalable distributed applications with Ray. Master everything from distributed training and multimodal data processing to model serving at scale and reinforcement learning - all with code examples.
 
 ## Who Is This For?
 
-- Software engineers exploring distributed computing
-- ML engineers building scalable training pipelines
-- Data scientists working with large-scale datasets
-- AI researchers implementing RL algorithms
-- Anyone looking to leverage Ray for production workloads
+- **Software engineers** exploring distributed computing
+- **ML engineers** building scalable training pipelines
+- **Data scientists** working with large-scale datasets
+- **AI researchers** implementing RL algorithms
+- **Anyone** looking to leverage Ray for production workloads at scale
+
+---
 
 ## Learning Paths
 
-### [01. Ray Fundamentals](./01-ray-fundamentals/)
+### 01. Ray Fundamentals
+
+**[→ Explore Ray Fundamentals](./01-ray-fundamentals/)**
+
 Start here if you're new to Ray. Learn the core concepts, architecture, and building blocks.
 
 **Topics covered:**
@@ -28,18 +61,27 @@ Start here if you're new to Ray. Learn the core concepts, architecture, and buil
 - Debugging and monitoring
 
 ### [02. Distributed Training](./02-distributed-training/)
+
+**[→ Explore Distributed Training](./02-distributed-training/)**
+
 Master distributed training for deep learning models at scale - from PyTorch DDP to FSDP.
 
 **🚀 Complete Learning Path:**
 - **Vanilla PyTorch DDP** - See the pain points of manual distributed training
 - **Ray Train DDP** - Eliminate 90% of boilerplate with 3 simple changes
-- **Ray Train FSDP** - Scale to large models with 1 parameter change
-- **Ray Train FSDP2** - Advanced configuration with CPU offload, mixed precision, and memory profiling
-- Side-by-side comparison showing Ray's advantages
+- **Ray Train FSDP**
+    - Scale to large models with 1 parameter change
+    - Advanced configuration with CPU offload, mixed precision, and memory profiling
+
+**[View Slides: Distributed Training with Ray](https://www.canva.com/design/DAG2W25BKAw/yXl48lXeg0g60Rf_1RUXrw/view)**
+*Deck covering distributed training concepts, architecture, and best practices*
+
+![Ray Train Ecosystem](./02-distributed-training/imgs/Ray_Train.png)
+*Ray Train integrates seamlessly with popular frameworks and runs on any infrastructure*
 
 **Topics covered:**
 - Data Parallel (DDP) vs Fully Sharded Data Parallel (FSDP)
-- Ray Train integration with PyTorch (same model: VisionTransformer on CIFAR-10)
+- Ray Train integration with PyTorch 
 - Automatic resource management and fault tolerance
 - Multi-node GPU training with shared storage
 - When to use DDP vs FSDP for your models
@@ -47,13 +89,16 @@ Master distributed training for deep learning models at scale - from PyTorch DDP
 - GPU utilization visualization with Ray Dashboard
 
 ### [03. Multimodal Data Processing](./03-multimodal-data-processing/)
+
+**[→ Explore Multimodal Data Processing](./03-multimodal-data-processing/)**
+
 Process large-scale multimodal datasets efficiently with Ray Data.
 
 **🎬 Project: [Video Highlight Generator](./03-multimodal-data-processing/video-highlight-generator/)**
 
 [![Video Highlight Generator Demo](https://img.youtube.com/vi/H2YptjwTEXc/maxresdefault.jpg)](https://www.youtube.com/watch?v=H2YptjwTEXc)
 
-*Watch: AI-powered video highlight generation with Ray distributed processing (2 min demo)*
+*Watch: AI-powered video highlight generation with Ray distributed processing (2 min demo) showcased at PyTorch Conf 2025*
 
 **Topics covered:**
 - Ray Data fundamentals
@@ -65,28 +110,32 @@ Process large-scale multimodal datasets efficiently with Ray Data.
 - Data quality and validation
 
 ### [04. Inference](./04-inference/)
-Deploy and serve ML models at scale with high throughput and low latency.
+
+**[→ Coming Soon](./04-inference/)**
+
+Deploy and serve models at scale with Ray Serve.
 
 **Topics covered:**
-- Ray Serve fundamentals
-- Model deployment patterns
-- Batching and autoscaling
+- Model deployment and serving patterns
+- Batch inference optimization
+- Online serving with autoscaling
 - Multi-model serving
-- LLM inference optimization
-- A/B testing and model versioning
-- Production monitoring
+- A/B testing and canary deployments
+- Performance monitoring
 
 ### [05. Reinforcement Learning](./05-reinforcement-learning/)
-Build and train RL agents with Ray RLlib.
+
+**[→ Coming Soon](./05-reinforcement-learning/)**
+
+Build and train reinforcement learning agents with RLlib.
 
 **Topics covered:**
-- RLlib architecture and concepts
-- Policy optimization algorithms (PPO, SAC, etc.)
-- Multi-agent RL
-- Custom environments and models
+- RLlib fundamentals
+- Policy optimization algorithms (PPO, A3C, SAC)
+- Custom environments and reward shaping
+- Multi-agent reinforcement learning
 - Distributed RL training
-- RLHF for LLM alignment
-- Production deployment
+- RLHF for language models
 
 ## Repository Structure
 
@@ -105,11 +154,11 @@ ray-for-developers/
 
 ### Prerequisites
 
-- Python 3.12
-- [uv](https://github.com/astral-sh/uv) - Fast Python package installer
-- Basic understanding of Python and machine learning concepts
-- Familiarity with PyTorch (for training sections)
-- GPU with CUDA support (optional, for accelerated training)
+- 🐍 Python 3.12
+- ⚡ [uv](https://github.com/astral-sh/uv) - Fast Python package installer
+- 📚 Basic understanding of Python and machine learning concepts
+- 🔥 Familiarity with PyTorch (for training sections)
+- 🎮 GPU with CUDA support (optional, for accelerated training)
 
 ### Installation
 
@@ -172,20 +221,53 @@ python examples/01_hello_ray.py
 
 Check out the [examples](./examples/) directory for complete end-to-end projects:
 
-- Image classification with distributed training
-- LLM fine-tuning pipeline
-- Real-time video processing
-- Multi-model serving system
-- RL-based recommendation system
+- 📸 Image classification with distributed training
+- 🤖 LLM fine-tuning pipeline
+- 🎥 Real-time video processing
+- 🚀 Multi-model serving system
+- 🎯 RL-based recommendation system
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit issues, fork the repository, and create pull requests.
+Contributions are welcome! Here's how you can help:
+
+- 🐛 Report bugs and issues
+- 💡 Suggest new features or improvements
+- 📝 Improve documentation
+- 🔧 Submit pull requests
+
+Please feel free to submit issues, fork the repository, and create pull requests.
 
 ## Resources
 
-- [Ray Documentation](https://docs.ray.io/)
-- [Ray Blog](https://www.anyscale.com/blog)
-- [Ray Community](https://discuss.ray.io/)
-- [Ray GitHub](https://github.com/ray-project/ray)
-- [uv Documentation](https://docs.astral.sh/uv/)
+- 📖 [Ray Documentation](https://docs.ray.io/)
+- 📝 [Ray Blog](https://www.anyscale.com/blog)
+- 💬 [Ray Community](https://discuss.ray.io/)
+- 🐙 [Ray GitHub](https://github.com/ray-project/ray)
+- ⚡ [uv Documentation](https://docs.astral.sh/uv/)
+
+---
+
+## Support
+
+If you find this repository helpful, please consider giving it a ⭐ on GitHub! It helps others discover this resource.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with [Ray](https://ray.io/) - the open-source framework for scaling AI and Python applications
+- Inspired by the Ray community and the need for practical, hands-on learning resources
+- Special thanks to all contributors and the open-source community
+
+---
+
+<div align="center">
+
+**[⬆ Back to Top](#ray-for-developers)**
+
+Made with ❤️ by [Suman Debnath](https://github.com/debnsuma)
+
+</div>

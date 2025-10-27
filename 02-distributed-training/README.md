@@ -9,8 +9,52 @@ This module teaches you **distributed training the right way** through a clear l
 2. How Ray Train eliminates 90% of the boilerplate
 3. How to switch from DDP to FSDP with one parameter change
 
-**Model**: VisionTransformer on CIFAR-10
-**Progression**: Single Machine → Vanilla DDP → Ray DDP → Ray FSDP
+---
+
+## 📊 Slide Deck
+
+**[→ View Slides: Distributed Training with Ray](https://www.canva.com/design/DAG2W25BKAw/yXl48lXeg0g60Rf_1RUXrw/view)**
+
+Comprehensive presentation covering:
+- Distributed training fundamentals (DDP vs FSDP)
+- Ray Train architecture and design
+- Code comparisons and best practices
+- Performance benchmarks and scaling strategies
+- Real-world examples and debugging tips
+
+![Ray Train Ecosystem](./imgs/Ray_Train.png)
+*Ray Train integrates seamlessly with popular frameworks (PyTorch, TensorFlow, Hugging Face, DeepSpeed) and runs on any infrastructure (AWS, GCP, Azure, Lambda, On-Premise)*
+
+---
+
+### 🎯 Training Setup
+
+```
+📊 Model:  VisionTransformer (ViT)
+📦 Dataset: CIFAR-10 (50k images, 10 classes)
+🔧 Task:    Image Classification
+```
+
+### 🚀 Learning Progression
+
+```
+Step 1: Single Machine    →  Baseline (1 GPU)
+        🖥️ train_single_machine.py
+
+Step 2: Vanilla DDP       →  Manual Setup (4 GPUs, ~350 lines)
+        ⚠️ train_ddp.py
+
+Step 3: Ray Train DDP     →  Automated (4+ GPUs, ~250 lines)
+        ✅ train_ray_ddp.py
+
+Step 4: Ray Train FSDP    →  Memory Efficient (4+ GPUs, 1 parameter change!)
+        ⚡ train_ray_fsdp.py
+
+Step 5: Ray Train FSDP2   →  Advanced Control (CPU offload, mixed precision)
+        🎛️ train_ray_fsdp2.py
+```
+
+**Result**: From 350 lines of manual boilerplate → 250 lines of automated training → Same code + `parallel_strategy="fsdp"` for memory efficiency!
 
 ## Learning Path
 
