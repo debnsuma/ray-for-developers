@@ -34,6 +34,7 @@ Master distributed training for deep learning models at scale - from PyTorch DDP
 - **Vanilla PyTorch DDP** - See the pain points of manual distributed training
 - **Ray Train DDP** - Eliminate 90% of boilerplate with 3 simple changes
 - **Ray Train FSDP** - Scale to large models with 1 parameter change
+- **Ray Train FSDP2** - Advanced configuration with CPU offload, mixed precision, and memory profiling
 - Side-by-side comparison showing Ray's advantages
 
 **Topics covered:**
@@ -42,6 +43,8 @@ Master distributed training for deep learning models at scale - from PyTorch DDP
 - Automatic resource management and fault tolerance
 - Multi-node GPU training with shared storage
 - When to use DDP vs FSDP for your models
+- Advanced FSDP configuration (CPU offload, mixed precision, memory profiling)
+- GPU utilization visualization with Ray Dashboard
 
 ### [03. Multimodal Data Processing](./03-multimodal-data-processing/)
 Process large-scale multimodal datasets efficiently with Ray Data.

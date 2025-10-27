@@ -137,6 +137,17 @@ Final metrics: {'accuracy': 0.8734}
 - **Configuration**: 12 workers (3 nodes × 4 GPUs), batch_size=42 per worker (504 global)
 - **Storage**: `/mnt/cluster_storage/cifar10_ddp_3b83a48a/`
 
+### Ray Dashboard - Multi-Node Training Visualization
+
+![Ray Train DDP Dashboard](../imgs/03_ray_dashboard_train_ddp.png)
+
+**What you're seeing in the Ray Dashboard:**
+- **Multi-node orchestration** - Ray automatically manages workers across 3 nodes
+- **Resource utilization** - Real-time view of CPU, GPU, and memory usage across all nodes
+- **Task scheduling** - See how Ray distributes training work efficiently
+- **Fault tolerance** - Ray handles worker failures and automatic retries
+- **No manual setup** - Ray handles all distributed coordination automatically!
+
 **Performance Comparison:**
 - **2.0x faster** than vanilla DDP (4 GPUs, 1 node): 4:01 vs 7:55
 - **Better accuracy**: 60.91% vs 57.62% (vanilla DDP)

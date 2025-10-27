@@ -262,10 +262,6 @@ def main():
     scaling_config = ScalingConfig(
         num_workers=args.num_workers,
         use_gpu=args.use_gpu,
-        resources_per_worker={
-            "CPU": 2,
-            "GPU": 1 if args.use_gpu else 0
-        }
     )
 
     # Configure checkpointing

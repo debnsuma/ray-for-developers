@@ -114,7 +114,28 @@ pip install torch torchvision
 python -c "import torch; print(f'GPUs: {torch.cuda.device_count()}')"
 ```
 
-### Basic Training
+### Baseline: Single Machine Training
+
+First, see what single-GPU training looks like:
+
+```bash
+# Train on single GPU (baseline)
+python train_single_machine.py --epochs 10
+```
+
+#### Single GPU Utilization
+
+![Single GPU Training](../imgs/01_nvitop_train_single_machine.png)
+
+**What you're seeing:**
+- Only **1 GPU active** (GPU 0) during training
+- Other GPUs idle (0% utilization)
+- Limited by single GPU throughput
+- This is your baseline - DDP should utilize all GPUs!
+
+---
+
+### Distributed Training with DDP
 ```bash
 # Train with all available GPUs (default: 10 epochs)
 python train_ddp.py
@@ -161,6 +182,16 @@ Epoch 1/10
 - **Final Accuracy**: 57.62%
 - **Configuration**: 4 GPUs on 1 node, batch_size=128 per GPU (512 global)
 - **Progression**: 32.92% → 40.92% → 49.13% → 50.49% → 51.94% → 55.03% → 55.38% → 55.90% → 57.31% → 57.62%
+
+### GPU Utilization During DDP Training
+
+![Vanilla PyTorch DDP GPU Utilization](../imgs/02_nvitop_train_ddp.png)
+
+**What you're seeing:**
+- All 4 GPUs actively training with synchronized gradient updates
+- High GPU utilization (~90-100%) during training
+- Each GPU processing its own data partition
+- Memory usage shows full model copy on each GPU
 
 **Comparison to Ray Train** (12 workers, 3 nodes):
 - Ray Train DDP: **4:01** (2.0x faster), **60.91%** accuracy

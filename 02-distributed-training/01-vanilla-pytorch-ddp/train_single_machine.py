@@ -6,10 +6,13 @@ This serves as the baseline to compare against distributed approaches.
 
 Model: VisionTransformer
 Dataset: CIFAR-10
-Hardware: Single GPU (or CPU)
+Hardware: Single GPU/MPS (or CPU)
 
 This example shows standard PyTorch training without any distributed code.
 """
+
+from typing import Any
+
 
 import os
 import torch
@@ -85,8 +88,8 @@ def train_func(lr=1e-3, epochs=10, batch_size=512):
         num_classes=10   # CIFAR-10 has 10 classes
     )
 
-    # Move to GPU if available
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    # Move to GPU if available (CUDA or MPS)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'mps' if torch.backends.mps.is_available() else 'cpu')
     print(f"Using device: {device}\n")
     model.to(device)
 

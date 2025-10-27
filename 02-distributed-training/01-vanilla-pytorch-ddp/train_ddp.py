@@ -8,15 +8,16 @@ Model: VisionTransformer
 Dataset: CIFAR-10 (SAME as Ray Train example)
 Strategy: Data Parallel
 
-Notice all the manual boilerplate (marked with BOILERPLATE #1-9):
+Notice all the manual boilerplate (marked with BOILERPLATE #1-8):
 - Manual process spawning
 - Manual distributed setup/cleanup
 - Manual DistributedSampler
-- Manual metric aggregation
+- Must remember to call sampler.set_epoch() every epoch
 - No fault tolerance
 - Complex error handling
 
-This is ~350 lines vs ~250 lines for Ray Train (doing the EXACT same thing!)
+Simplified version following official PyTorch DDP tutorial patterns.
+This is ~330 lines vs ~250 lines for Ray Train (doing the EXACT same thing!)
 """
 
 import os
@@ -157,7 +158,7 @@ def get_dataloaders(rank, world_size, batch_size):
 
 
 # ============================================================================
-# TRAINING FUNCTIONS
+# TRAINING FUNCTIONS (SAME AS Ray Train!)
 # ============================================================================
 
 def train_epoch(model, train_loader, criterion, optimizer, rank):
@@ -172,6 +173,9 @@ def train_epoch(model, train_loader, criterion, optimizer, rank):
         outputs = model(X)
         loss = criterion(outputs, y)
         loss.backward()
+        # Comment clarification:
+        # After loss.backward(), DDP synchronizes/averages gradients across all workers automatically,
+        # and then optimizer.step() updates the weights on each process identically.
         optimizer.step()
 
         running_loss += loss.item()
@@ -179,19 +183,14 @@ def train_epoch(model, train_loader, criterion, optimizer, rank):
     return running_loss / len(train_loader)
 
 
-def validate(model, valid_loader, criterion, rank, world_size):
+def validate(model, valid_loader, criterion, rank):
     """
-    Validate the model.
+    Validate the model on this process's data partition.
 
-    BOILERPLATE #4: Manual metric aggregation with all_reduce.
+    Following official PyTorch DDP tutorial - no need for all_reduce() in validation.
+    Each process computes metrics on its own data partition. This is sufficient
+    for monitoring training progress.
 
-    You must:
-    - Convert metrics to tensors on correct device
-    - Call dist.all_reduce() manually for each metric
-    - Divide by world_size to get average
-    - Handle device placement carefully
-
-    Ray Train: train.report() aggregates automatically
     """
     model.eval()
     running_loss = 0.0
@@ -208,31 +207,20 @@ def validate(model, valid_loader, criterion, rank, world_size):
             num_total += y.shape[0]
             num_correct += (outputs.argmax(1) == y).sum().item()
 
-    # BOILERPLATE #4: Manual all_reduce for metrics
-    # Convert to tensors
-    loss_tensor = torch.tensor([running_loss], device=f'cuda:{rank}')
-    correct_tensor = torch.tensor([num_correct], device=f'cuda:{rank}')
-    total_tensor = torch.tensor([num_total], device=f'cuda:{rank}')
-
-    # Sum across all processes
-    dist.all_reduce(loss_tensor, op=dist.ReduceOp.SUM)
-    dist.all_reduce(correct_tensor, op=dist.ReduceOp.SUM)
-    dist.all_reduce(total_tensor, op=dist.ReduceOp.SUM)
-
-    # Calculate global metrics
-    avg_loss = loss_tensor.item() / (len(valid_loader) * world_size)
-    accuracy = correct_tensor.item() / total_tensor.item()
+    # Compute local metrics 
+    avg_loss = running_loss / len(valid_loader)
+    accuracy = num_correct / num_total if num_total > 0 else 0.0
 
     return avg_loss, accuracy
 
 
 # ============================================================================
-# MAIN TRAINING WORKER (BOILERPLATE #5-8)
+# MAIN TRAINING WORKER (BOILERPLATE #4-7)
 # ============================================================================
 
 def train_worker(rank, world_size, args):
     """
-    BOILERPLATE #5: Training function that runs on each process.
+    BOILERPLATE #4: Training function that runs on each process.
 
     You must:
     - Handle entire lifecycle: setup → train → cleanup
@@ -271,7 +259,7 @@ def train_worker(rank, world_size, args):
             num_classes=10
         )
 
-        # BOILERPLATE #6: Manual DDP wrapping
+        # BOILERPLATE #5: Manual DDP wrapping
         # Move to GPU then wrap with DDP
         model = model.cuda(rank)
         model = DDP(model, device_ids=[rank])
@@ -287,7 +275,7 @@ def train_worker(rank, world_size, args):
 
         # Training loop
         for epoch in range(1, args.epochs + 1):
-            # BOILERPLATE #7: Must manually set epoch for proper shuffling
+            # BOILERPLATE #6: Must manually set epoch for proper shuffling
             # Forget this and your shuffling breaks!
             train_sampler.set_epoch(epoch)
 
@@ -298,8 +286,8 @@ def train_worker(rank, world_size, args):
             # Train (this part is identical to Ray Train!)
             train_loss = train_epoch(model, train_loader, criterion, optimizer, rank)
 
-            # Validate (includes manual all_reduce)
-            valid_loss, accuracy = validate(model, valid_loader, criterion, rank, world_size)
+            # Validate (simple local metrics, no all_reduce needed)
+            valid_loss, accuracy = validate(model, valid_loader, criterion, rank)
 
             if rank == 0:
                 print(f"\nResults:")
@@ -328,17 +316,17 @@ def train_worker(rank, world_size, args):
         raise
 
     finally:
-        # BOILERPLATE #8: Must manually clean up or processes hang
+        # BOILERPLATE #7: Must manually clean up or processes hang
         cleanup_distributed()
 
 
 # ============================================================================
-# MAIN ENTRY POINT (BOILERPLATE #9)
+# MAIN ENTRY POINT (BOILERPLATE #8)
 # ============================================================================
 
 def main():
     """
-    BOILERPLATE #9: Manual process spawning with mp.spawn().
+    BOILERPLATE #8: Manual process spawning with mp.spawn().
 
     You must:
     - Spawn one process per GPU manually
@@ -376,7 +364,7 @@ def main():
 
     start_time = datetime.now()
 
-    # BOILERPLATE #9: Manual process spawning
+    # BOILERPLATE #8: Manual process spawning
     # This creates a separate Python process for each GPU
     mp.spawn(
         train_worker,
@@ -397,26 +385,25 @@ def main():
     print("\n" + "="*60)
     print("COMPARISON: What Ray Train saves you")
     print("="*60)
-    print("This vanilla DDP code: ~350 lines")
-    print("Ray Train equivalent: ~250 lines (28% less!)")
+    print("This vanilla DDP code: ~330 lines")
+    print("Ray Train equivalent: ~250 lines (24% less!)")
     print()
     print("Manual boilerplate steps in this code:")
     print("  #1: setup_distributed() - Manual process group init")
     print("  #2: cleanup_distributed() - Manual cleanup")
     print("  #3: DistributedSampler - Manual data partitioning")
-    print("  #4: all_reduce() - Manual metric aggregation")
-    print("  #5: train_worker() - Manual lifecycle management")
-    print("  #6: DDP() wrapping - Manual model wrapping")
-    print("  #7: sampler.set_epoch() - Manual epoch setting")
-    print("  #8: finally cleanup - Manual error handling")
-    print("  #9: mp.spawn() - Manual process spawning")
+    print("  #4: train_worker() - Manual lifecycle management")
+    print("  #5: DDP() wrapping - Manual model wrapping")
+    print("  #6: sampler.set_epoch() - Manual epoch setting")
+    print("  #7: finally cleanup - Manual error handling")
+    print("  #8: mp.spawn() - Manual process spawning")
     print()
     print("Ray Train equivalent:")
     print("  [1] train.torch.prepare_data_loader()")
     print("  [2] train.torch.prepare_model()")
     print("  [3] train.report()")
     print()
-    print("9 manual steps → 3 automatic calls")
+    print("8 manual steps → 3 automatic calls")
     print("That's why you should use Ray Train! 🚀")
     print("="*60 + "\n")
 
