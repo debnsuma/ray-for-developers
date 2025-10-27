@@ -148,12 +148,12 @@ Build and train reinforcement learning agents with RLlib, Ray's scalable reinfor
 
 ```
 ray-for-developers/
-├── 01-ray-fundamentals/          # Core Ray concepts
+├── 01-ray-fundamentals/           # Core Ray concepts
 ├── 02-distributed-training/       # Training at scale
 ├── 03-multimodal-data-processing/ # Data pipelines
 ├── 04-inference/                  # Model serving
 ├── 05-reinforcement-learning/     # RL with Ray
-└── imgs/                        # Images and resources
+└── imgs/                          # Images and resources
 ```
 
 ## Getting Started
