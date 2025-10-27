@@ -99,7 +99,7 @@ View Slides: **[Distributed Training with Ray](https://www.canva.com/design/DAG2
 
 Learn to process large-scale multimodal datasets efficiently with Ray Data, which provides a scalable data processing layer for ML workloads. Ray Data handles petabyte-scale datasets by distributing I/O, transformation, and preprocessing operations across cluster nodes, making it ideal for training data preparation and inference preprocessing.
 
-**Featured Project: [Video Highlight Generator](./03-multimodal-data-processing/video-highlight-generator/)**
+**Project: [Video Highlight Generator](./03-multimodal-data-processing/video-highlight-generator/)**
 
 An AI-powered system that automatically creates 30-second highlight reels from full-length videos using distributed video processing, feature extraction with deep learning models, and intelligent highlight detection algorithms.
 
