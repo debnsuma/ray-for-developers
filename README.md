@@ -79,8 +79,7 @@ This module takes you through a progressive journey from manual distributed trai
 - **Ray Train DDP** - Learn how Ray Train eliminates approximately 90% of boilerplate code while maintaining the same performance, requiring only 3 simple changes to your training code
 - **Ray Train FSDP** - Discover memory-efficient training with Fully Sharded Data Parallel, which allows you to train models that don't fit on a single GPU by sharding model parameters, gradients, and optimizer states across multiple GPUs. Includes advanced configurations for CPU offloading, mixed precision training, and memory profiling
 
-**[View Slides: Distributed Training with Ray](https://www.canva.com/design/DAG2W25BKAw/yXl48lXeg0g60Rf_1RUXrw/view)**
-*Deck covering distributed training concepts, architecture, and best practices*
+View Slides: **[Distributed Training with Ray](https://www.canva.com/design/DAG2W25BKAw/yXl48lXeg0g60Rf_1RUXrw/view)**
 
 ![Ray Train Ecosystem](./02-distributed-training/imgs/Ray_Train.png)
 *Ray Train integrates seamlessly with popular frameworks and runs on any infrastructure*
