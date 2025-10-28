@@ -1,9 +1,6 @@
 # Video Highlight Generator
 
-> Automatically create 30-second highlight reels from videos using Ray distributed computing and visual analysis
-
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-[![Ray 2.47.0](https://img.shields.io/badge/ray-2.47.0-orange.svg)](https://ray.io/)
+> Automatically create short highlight reels from videos using Ray distributed computing and visual analysis
 
 ## Overview
 
@@ -232,35 +229,6 @@ The pipeline uses sensible defaults but can be customized:
 - `fade_duration` - Transition fade time (default: 0.5s)
 - `max_duration` - Maximum highlight reel length (default: 30.0s)
 
----
-
-## Troubleshooting
-
-**FFmpeg not found:**
-```bash
-# Install FFmpeg (see Installation section)
-ffmpeg -version  # Verify installation
-```
-
-**Ray initialization error on cluster:**
-```
-ValueError: When connecting to an existing cluster, num_cpus and num_gpus must not be provided.
-```
-Solution: Fixed automatically by `safe_ray_init()` - ensure using latest code.
-
-**OpenCV GUI error on cluster:**
-```
-ImportError: libGL.so.1: cannot open shared object file
-```
-Solution: Using `opencv-python-headless` - ensure requirements.txt installed correctly.
-
-**Out of memory:**
-- Reduce `num_actors` (fewer parallel workers)
-- Reduce `target_fps` (fewer frames to process)
-- Use smaller videos for testing
-
----
-
 ## Technical Details
 
 **Models:**
@@ -279,14 +247,6 @@ Solution: Using `opencv-python-headless` - ensure requirements.txt installed cor
 - Models loaded once per actor
 - Distributed batch processing
 - Automatic task distribution
-
----
-
-## License
-
-MIT License - see main repository for details.
-
----
 
 ## Resources
 
