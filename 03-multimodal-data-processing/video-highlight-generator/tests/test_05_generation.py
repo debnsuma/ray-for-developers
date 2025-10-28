@@ -1,5 +1,5 @@
 """
-Test 6: Video Highlight Generation
+Test 5: Video Highlight Generation
 Test extraction and concatenation of highlight clips
 """
 from pathlib import Path
@@ -8,12 +8,13 @@ import subprocess
 import json
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.features.video_generator import VideoHighlightGenerator
+from src.utils.ray_utils import get_storage_path
 
 print("=" * 70)
-print("TEST 6: Video Highlight Generation")
+print("TEST 5: Video Highlight Generation")
 print("=" * 70)
 
 # Test 6.1: Initialize VideoHighlightGenerator
@@ -35,7 +36,7 @@ except Exception as e:
 print("\n2. Test Single Clip Extraction:")
 try:
     # Get test video
-    video_dir = Path("data/raw/demo")
+    video_dir = get_storage_path("raw/demo")
     test_video = None
 
     # Use smallest video for quick testing
@@ -50,7 +51,7 @@ try:
     print(f"   Test video: {test_video.name}")
 
     # Extract single clip at 5 seconds
-    test_clip_path = Path("data/output/demo/test_clip.mp4")
+    test_clip_path = get_storage_path("output/demo") / Path("test_clip.mp4")
     test_clip_path.parent.mkdir(parents=True, exist_ok=True)
 
     success = generator.extract_clip(
@@ -78,7 +79,7 @@ except Exception as e:
 # Test 6.3: Test transitions
 print("\n3. Test Fade Transitions:")
 try:
-    transition_clip_path = Path("data/output/demo/test_clip_fade.mp4")
+    transition_clip_path = get_storage_path("output/demo") / "test_clip_fade.mp4"
 
     success = generator.add_fade_transitions(
         input_path=str(test_clip_path),
@@ -110,7 +111,7 @@ try:
 
     test_clips = []
     for i in range(3):
-        clip_path = Path(f"data/output/demo/concat_test_clip_{i}.mp4")
+        clip_path = get_storage_path("output/demo") / f"concat_test_clip_{i}.mp4"
         timestamp = 3.0 + i * 3.0  # Clips at 3s, 6s, 9s
 
         success = generator.extract_clip(
@@ -126,7 +127,7 @@ try:
     print(f"   Created {len(test_clips)} test clips")
 
     # Concatenate
-    concat_output = Path("data/output/demo/test_concatenated.mp4")
+    concat_output = get_storage_path("output/demo") / "test_concatenated.mp4"
 
     success = generator.concatenate_clips(
         clip_paths=test_clips,
@@ -151,8 +152,8 @@ except Exception as e:
 # Test 6.5: Test full highlight reel generation
 print("\n5. Test Full Highlight Reel Generation:")
 try:
-    highlights_dir = Path("data/highlights/demo")
-    video_dir = Path("data/raw/demo")
+    highlights_dir = get_storage_path("highlights/demo")
+    video_dir = get_storage_path("raw/demo")
 
     # Test on smallest video first
     test_highlights = None
@@ -176,7 +177,7 @@ try:
     print(f"   Video: {test_video.name}")
     print(f"   Highlights: {test_highlights.name}")
 
-    output_path = Path("data/output/demo") / f"{test_video.stem}_highlight_reel.mp4"
+    output_path = get_storage_path("output/demo") / f"{test_video.stem}_highlight_reel.mp4"
 
     result = generator.generate_highlight_reel(
         video_path=str(test_video),
@@ -204,8 +205,8 @@ except Exception as e:
 # Test 6.6: Generate highlight reels for all videos
 print("\n6. Generate Highlight Reels for All Videos:")
 try:
-    highlights_dir = Path("data/highlights/demo")
-    video_dir = Path("data/raw/demo")
+    highlights_dir = get_storage_path("highlights/demo")
+    video_dir = get_storage_path("raw/demo")
 
     highlight_files = list(highlights_dir.glob("*_highlights.json"))
     print(f"   Found {len(highlight_files)} highlight files")
@@ -220,7 +221,7 @@ try:
             print(f"   ⚠️  Video not found: {video_path.name}")
             continue
 
-        output_path = Path("data/output/demo") / f"{video_name}_highlight_reel.mp4"
+        output_path = get_storage_path("output/demo") / f"{video_name}_highlight_reel.mp4"
 
         print(f"\n   Processing: {video_name}")
 
@@ -257,7 +258,7 @@ except Exception as e:
 # Test 6.7: Verify output videos
 print("\n7. Verify Output Videos:")
 try:
-    output_dir = Path("data/output/demo")
+    output_dir = get_storage_path("output/demo")
     reel_files = list(output_dir.glob("*_highlight_reel.mp4"))
 
     print(f"   Highlight reel files: {len(reel_files)}")

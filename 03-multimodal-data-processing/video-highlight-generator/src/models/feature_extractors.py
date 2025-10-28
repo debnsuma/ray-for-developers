@@ -1,6 +1,6 @@
 """
 Visual Feature Extraction with Ray Actors
-Optimized for M4 MacBook Pro with MPS acceleration
+Supports GPU acceleration (CUDA/MPS) and CPU fallback
 Uses MobileNetV3-small for lightweight, fast inference
 """
 import ray
@@ -18,23 +18,30 @@ import json
 class VisualFeatureExtractor:
     """
     Ray Actor for extracting visual features from video frames
-    Uses MobileNetV3-small optimized for M4 MacBook Pro
+    Automatically selects best available device (CUDA > MPS > CPU)
     """
 
-    def __init__(self, model_name: str = "mobilenet_v3_small", use_mps: bool = True):
+    def __init__(self, model_name: str = "mobilenet_v3_small", use_gpu: bool = True):
         """
         Initialize the feature extractor
 
         Args:
-            model_name: Model to use (mobilenet_v3_small is optimized for M4)
-            use_mps: Use MPS acceleration on M4 if available
+            model_name: Model to use (mobilenet_v3_small for lightweight inference)
+            use_gpu: Use GPU acceleration (CUDA/MPS) if available
         """
         print(f"🔧 Initializing VisualFeatureExtractor (Ray Actor)...")
 
-        # Set device
-        if use_mps and torch.backends.mps.is_available():
-            self.device = torch.device("mps")
-            print(f"   Using MPS acceleration on M4")
+        # Select best available device
+        if use_gpu:
+            if torch.cuda.is_available():
+                self.device = torch.device("cuda")
+                print(f"   Using CUDA acceleration (GPU: {torch.cuda.get_device_name(0)})")
+            elif torch.backends.mps.is_available():
+                self.device = torch.device("mps")
+                print(f"   Using MPS acceleration (Apple Silicon)")
+            else:
+                self.device = torch.device("cpu")
+                print(f"   GPU not available, using CPU")
         else:
             self.device = torch.device("cpu")
             print(f"   Using CPU")
@@ -88,8 +95,10 @@ class VisualFeatureExtractor:
         with torch.no_grad():
             features = self.model(img_tensor)
 
-            # Synchronize MPS if needed
-            if self.device.type == "mps":
+            # Synchronize based on device type
+            if self.device.type == "cuda":
+                torch.cuda.synchronize()
+            elif self.device.type == "mps":
                 torch.mps.synchronize()
 
         # Convert to numpy
@@ -200,6 +209,7 @@ class VisualFeatureExtractor:
         return {
             'device': str(self.device),
             'device_type': self.device.type,
+            'cuda_available': torch.cuda.is_available(),
             'mps_available': torch.backends.mps.is_available()
         }
 
@@ -217,7 +227,7 @@ def create_feature_extractor_pool(num_actors: int = 2) -> List:
     print(f"\n🚀 Creating pool of {num_actors} VisualFeatureExtractor actors...")
 
     actors = [
-        VisualFeatureExtractor.remote(model_name="mobilenet_v3_small", use_mps=True)
+        VisualFeatureExtractor.remote(model_name="mobilenet_v3_small", use_gpu=True)
         for _ in range(num_actors)
     ]
 

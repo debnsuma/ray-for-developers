@@ -1,11 +1,15 @@
 """
 Test 1: Environment Setup
-Verify Ray, PyTorch, and MPS are working correctly on M4 MacBook Pro
+Verify Ray, PyTorch, and device acceleration are working correctly
+Compatible with both Mac (local) and Ray cluster environments
 """
 import sys
+import os
 
 print("=" * 70)
 print("TEST 1: Environment Setup")
+print("=" * 70)
+print(f"Environment: {'Ray Cluster' if os.environ.get('RAY_ADDRESS') else 'Local'}")
 print("=" * 70)
 
 # Test 1.1: Python version
@@ -46,17 +50,25 @@ except ImportError as e:
     print(f"   ❌ ray import failed: {e}")
     sys.exit(1)
 
-# Test 1.3: MPS availability
-print("\n3. MPS (Metal Performance Shaders) Status:")
+# Test 1.3: Device acceleration status
+print("\n3. Device Acceleration Status:")
+print(f"   CUDA Available: {torch.cuda.is_available()}")
+if torch.cuda.is_available():
+    print(f"   CUDA Device Count: {torch.cuda.device_count()}")
+    print(f"   CUDA Device Name: {torch.cuda.get_device_name(0)}")
 print(f"   MPS Available: {torch.backends.mps.is_available()}")
 print(f"   MPS Built: {torch.backends.mps.is_built()}")
 
-if torch.backends.mps.is_available():
+# Select best available device
+if torch.cuda.is_available():
+    device = torch.device("cuda")
+    print(f"   ✅ Using CUDA device: {device}")
+elif torch.backends.mps.is_available():
     device = torch.device("mps")
-    print(f"   ✅ MPS device: {device}")
+    print(f"   ✅ Using MPS device: {device}")
 else:
     device = torch.device("cpu")
-    print(f"   ⚠️  MPS not available, using CPU")
+    print(f"   ⚠️  No GPU acceleration available, using CPU")
 
 # Test 1.4: Simple PyTorch operation
 print("\n4. PyTorch Computation Test:")
@@ -65,8 +77,11 @@ try:
     y = torch.randn(100, 100).to(device)
     z = x @ y  # Matrix multiplication
 
-    if device.type == "mps":
-        torch.mps.synchronize()  # Wait for MPS to finish
+    # Synchronize based on device type
+    if device.type == "cuda":
+        torch.cuda.synchronize()
+    elif device.type == "mps":
+        torch.mps.synchronize()
 
     print(f"   Input shape: {x.shape}")
     print(f"   Output shape: {z.shape}")
@@ -79,9 +94,21 @@ except Exception as e:
 # Test 1.5: Ray initialization
 print("\n5. Ray Framework Test:")
 try:
-    ray.init(num_cpus=4, ignore_reinit_error=True)
+    # Import utility for safe Ray initialization
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from src.utils.ray_utils import safe_ray_init
+
+    # Initialize Ray (handles both local and cluster modes)
+    safe_ray_init(num_cpus=4)
     print(f"   Ray initialized: {ray.is_initialized()}")
-    print(f"   Available resources: {ray.available_resources()}")
+
+    # Show available resources
+    resources = ray.available_resources()
+    print(f"   Available CPUs: {resources.get('CPU', 0):.0f}")
+    if 'GPU' in resources:
+        print(f"   Available GPUs: {resources.get('GPU', 0):.0f}")
 
     # Simple Ray task
     @ray.remote
@@ -95,6 +122,8 @@ try:
 
 except Exception as e:
     print(f"   ❌ Ray initialization failed: {e}")
+    import traceback
+    traceback.print_exc()
     sys.exit(1)
 
 # Test 1.6: Ray + PyTorch integration
@@ -103,18 +132,28 @@ try:
     @ray.remote
     def pytorch_task(size):
         import torch
-        device = "mps" if torch.backends.mps.is_available() else "cpu"
+        # Select best available device
+        if torch.cuda.is_available():
+            device = "cuda"
+        elif torch.backends.mps.is_available():
+            device = "mps"
+        else:
+            device = "cpu"
+
         x = torch.randn(size, size).to(device)
         y = torch.randn(size, size).to(device)
         z = (x @ y).sum().item()
-        return z
+        return z, device
 
-    result = ray.get(pytorch_task.remote(50))
+    result, task_device = ray.get(pytorch_task.remote(50))
     print(f"   Task result: {result:.4f}")
+    print(f"   Task device: {task_device}")
     print(f"   ✅ Ray + PyTorch integration working")
 
 except Exception as e:
     print(f"   ❌ Ray + PyTorch integration failed: {e}")
+    import traceback
+    traceback.print_exc()
     sys.exit(1)
 
 # Test 1.7: FFmpeg check
@@ -142,7 +181,9 @@ print("\n" + "=" * 70)
 print("SUMMARY")
 print("=" * 70)
 print("✅ All critical tests passed!")
-print("\nYour M4 MacBook Pro is ready for development.")
+print(f"\nEnvironment: {'Ray Cluster' if os.environ.get('RAY_ADDRESS') else 'Local'}")
+print(f"Device: {device.type.upper()}")
+print("\nYour environment is ready for video processing.")
 print("\nNext step: Run test_02_video_loading.py")
 print("=" * 70 + "\n")
 

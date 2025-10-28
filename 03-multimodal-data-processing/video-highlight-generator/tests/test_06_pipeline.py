@@ -1,17 +1,18 @@
 """
-Test 7: End-to-End Pipeline
+Test 6: End-to-End Pipeline
 Test the complete pipeline with progress monitoring
 """
 from pathlib import Path
 import sys
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.pipeline import VideoHighlightPipeline
+from src.utils.ray_utils import get_storage_path
 
 print("=" * 70)
-print("TEST 7: End-to-End Pipeline")
+print("TEST 6: End-to-End Pipeline")
 print("=" * 70)
 
 # Test 7.1: Initialize Pipeline
@@ -33,7 +34,7 @@ except Exception as e:
 print("\n2. Run Complete Pipeline on Demo Video:")
 try:
     # Use smallest video for testing
-    video_path = Path("data/raw/demo/for_bigger_blazes.mp4")
+    video_path = get_storage_path("raw/demo") / "for_bigger_blazes.mp4"
 
     if not video_path.exists():
         print(f"   ❌ Video not found: {video_path}")
@@ -109,6 +110,61 @@ except Exception as e:
     print(f"   ❌ Verification failed: {e}")
     sys.exit(1)
 
+# Test 6.4: Play output video in terminal
+print("\n4. Play Output Video in Terminal:")
+try:
+    from src.utils.timg_video_player import check_timg_available, play_video_timg
+
+    if check_timg_available():
+        print(f"   📺 Playing highlight reel in terminal...")
+        play_video_timg(
+            video_path=str(output_video),
+            label="Generated Highlight Reel",
+            max_duration=30,
+            geometry="120x30"
+        )
+        print(f"   ✅ Video playback complete")
+    else:
+        print(f"   ℹ️  timg not available (headless environment)")
+        print(f"   📹 Output video location: {output_video}")
+        print(f"   💡 To view: Download the video or install timg locally")
+
+        # Show video metadata instead
+        import subprocess
+        import json
+        probe_cmd = [
+            'ffprobe',
+            '-v', 'error',
+            '-show_entries', 'format=duration',
+            '-show_entries', 'stream=width,height,codec_name',
+            '-of', 'json',
+            str(output_video)
+        ]
+
+        result = subprocess.run(probe_cmd, capture_output=True, text=True, check=True)
+        data = json.loads(result.stdout)
+
+        if 'streams' in data and len(data['streams']) > 0:
+            # Find video stream
+            video_streams = [s for s in data['streams'] if s.get('codec_type') == 'video']
+            if video_streams:
+                video_stream = video_streams[0]
+                duration = float(data['format']['duration']) if 'format' in data and 'duration' in data['format'] else 0
+
+                print(f"\n   Video Details:")
+                print(f"      Resolution: {video_stream.get('width', 'N/A')}x{video_stream.get('height', 'N/A')}")
+                print(f"      Codec: {video_stream.get('codec_name', 'N/A')}")
+                print(f"      Duration: {duration:.1f}s")
+                print(f"      Size: {output_video.stat().st_size / (1024*1024):.1f} MB")
+            else:
+                print(f"\n   Video Details:")
+                print(f"      Size: {output_video.stat().st_size / (1024*1024):.1f} MB")
+
+        print(f"   ✅ Video information displayed")
+
+except Exception as e:
+    print(f"   ⚠️  Could not play/display video: {e}")
+
 # Summary
 print("\n" + "=" * 70)
 print("SUMMARY")
@@ -118,5 +174,5 @@ print(f"\nProcessed: {results['video_name']}")
 print(f"Total time: {results['total_time']:.1f}s")
 print(f"Output: {results['output_video']}")
 print(f"\nPipeline ready for web interface!")
-print("Run: python app.py")
+print("Run: python demo.py")
 print("=" * 70 + "\n")

@@ -7,6 +7,11 @@ import cv2
 import numpy as np
 from pathlib import Path
 import tempfile
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.utils.ray_utils import safe_ray_init, get_storage_path
 
 print("=" * 70)
 print("TEST 2: Video Loading with Ray Data")
@@ -14,13 +19,13 @@ print("=" * 70)
 
 # Test 2.1: Initialize Ray
 print("\n1. Initialize Ray:")
-ray.init(num_cpus=4, ignore_reinit_error=True)
+safe_ray_init(num_cpus=4)
 print(f"   Ray version: {ray.__version__}")
 print(f"   ✅ Ray initialized")
 
 # Test 2.2: Load videos with Ray Data
 print("\n2. Load Videos with Ray Data:")
-video_dir = Path("data/raw/demo").absolute()
+video_dir = get_storage_path("raw/demo")
 
 # Get list of video files
 video_files = list(video_dir.glob("*.mp4"))
@@ -253,7 +258,6 @@ print("=" * 70)
 print("✅ All tests passed!")
 print(f"\nLoaded {count} videos successfully")
 print(f"Ray Data pipeline working correctly")
-print(f"\nNext step: python test_03_preprocessing.py")
 print("=" * 70 + "\n")
 
 ray.shutdown()

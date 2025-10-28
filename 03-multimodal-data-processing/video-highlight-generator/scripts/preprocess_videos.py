@@ -1,9 +1,9 @@
 """
 Preprocess videos with Ray Data
-- Extract frames at target FPS (default: 1 FPS for M4)
+- Extract frames at target FPS (default: 1 FPS)
 - Extract audio track
 - Save metadata
-Optimized for M4 MacBook Pro
+Compatible with both Mac (local) and Ray cluster environments
 """
 import ray
 import cv2
@@ -13,6 +13,11 @@ import subprocess
 import json
 import tempfile
 import os
+import sys
+
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.utils.ray_utils import safe_ray_init, get_storage_path, is_cluster_mode
 
 def preprocess_video(row, target_fps=1, resolution=(224, 224)):
     """
@@ -32,8 +37,8 @@ def preprocess_video(row, target_fps=1, resolution=(224, 224)):
 
     print(f"\n📹 Processing: {video_name}")
 
-    # Create output directory
-    output_dir = Path("data/processed/demo") / video_name
+    # Create output directory (cluster-aware)
+    output_dir = get_storage_path("processed/demo") / video_name
     output_dir.mkdir(parents=True, exist_ok=True)
 
     frames_dir = output_dir / "frames"
@@ -164,17 +169,19 @@ def main():
     print("=" * 70)
     print("VIDEO PREPROCESSING WITH RAY DATA")
     print("=" * 70)
-    print("\nOptimized for M4 MacBook Pro")
+    print("\nConfiguration:")
     print("- Target FPS: 1 (for faster processing)")
     print("- Resolution: 224x224 (lightweight)")
-    print("- Parallel processing with Ray Data\n")
+    print("- Parallel processing with Ray Data")
+    print(f"- Storage mode: {'Cluster (/mnt/cluster_storage)' if is_cluster_mode() else 'Local (./data)'}\n")
 
-    # Initialize Ray
-    ray.init(num_cpus=4, ignore_reinit_error=True)
-    print(f"✅ Ray initialized with 4 CPUs\n")
+    # Initialize Ray (handles both local and cluster modes)
+    safe_ray_init(num_cpus=4)
+    resources = ray.available_resources()
+    print(f"✅ Ray initialized with {resources.get('CPU', 0):.0f} CPUs\n")
 
-    # Load videos
-    video_dir = Path("data/raw/demo").absolute()
+    # Load videos (cluster-aware)
+    video_dir = get_storage_path("raw/demo")
     video_files = list(video_dir.glob("*.mp4"))
 
     if not video_files:
@@ -230,7 +237,7 @@ def main():
             total_frames += frames
 
     print(f"\nTotal extracted frames: {total_frames}")
-    print(f"Output directory: data/processed/demo/")
+    print(f"Output directory: {get_storage_path('processed/demo')}")
 
     print("\n" + "=" * 70)
     print("✅ Preprocessing complete!")

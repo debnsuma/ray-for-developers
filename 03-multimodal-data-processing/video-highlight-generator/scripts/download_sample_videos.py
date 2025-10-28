@@ -7,6 +7,10 @@ import subprocess
 from pathlib import Path
 import sys
 
+# Add parent directory to path for imports
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from src.utils.ray_utils import get_storage_path, is_cluster_mode
+
 def download_video(url: str, output_path: str, description: str) -> bool:
     """Download a video using curl"""
     print(f"\n📥 Downloading: {description}")
@@ -77,9 +81,10 @@ def main():
     print("SAMPLE VIDEO DOWNLOADER")
     print("=" * 70)
     print("\nDownloading small test videos (~100MB total)")
-    print("These are royalty-free sample videos for development\n")
+    print("These are royalty-free sample videos for development")
+    print(f"Storage mode: {'Cluster (/mnt/cluster_storage)' if is_cluster_mode() else 'Local (./data)'}\n")
 
-    output_dir = Path("data/raw/demo")
+    output_dir = get_storage_path("raw/demo")
     output_dir.mkdir(parents=True, exist_ok=True)
 
     # Sample videos from sample-videos.com and other free sources
@@ -87,17 +92,17 @@ def main():
     videos = [
         {
             "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            "output": "data/raw/demo/big_buck_bunny.mp4",
+            "output": str(output_dir / "big_buck_bunny.mp4"),
             "description": "Big Buck Bunny - Animated short (10 min)"
         },
         {
             "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
-            "output": "data/raw/demo/elephants_dream.mp4",
+            "output": str(output_dir / "elephants_dream.mp4"),
             "description": "Elephants Dream - Animated short (11 min)"
         },
         {
             "url": "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
-            "output": "data/raw/demo/for_bigger_blazes.mp4",
+            "output": str(output_dir / "for_bigger_blazes.mp4"),
             "description": "For Bigger Blazes - Short clip (15 sec)"
         }
     ]

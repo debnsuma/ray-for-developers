@@ -528,7 +528,7 @@ def main():
     # Run configuration
     run_config = RunConfig(
         name=f"cifar10_fsdp2_{uuid.uuid4().hex[:8]}",
-        storage_path=os.path.abspath("./ray_results"),  # OSS users: local path
+        storage_path="/mnt/cluster_storage",
         checkpoint_config=checkpoint_config,
     )
 

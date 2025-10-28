@@ -1,6 +1,6 @@
 """
 Test 4: Feature Extraction with Ray Actors
-Test MobileNetV3 on M4 MacBook Pro with MPS acceleration
+Test MobileNetV3 with GPU acceleration (CUDA/MPS)
 """
 import ray
 import torch
@@ -10,9 +10,10 @@ import sys
 import time
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.models.feature_extractors import VisualFeatureExtractor, create_feature_extractor_pool
+from src.utils.ray_utils import safe_ray_init, get_storage_path
 
 print("=" * 70)
 print("TEST 4: Feature Extraction with Ray Actors")
@@ -20,12 +21,15 @@ print("=" * 70)
 
 # Test 4.1: Initialize Ray
 print("\n1. Initialize Ray:")
-ray.init(num_cpus=4, ignore_reinit_error=True)
+safe_ray_init(num_cpus=4)
 print(f"   Ray version: {ray.__version__}")
 print(f"   ✅ Ray initialized")
 
-# Test 4.2: Test MPS availability
-print("\n2. MPS (Metal Performance Shaders) Status:")
+# Test 4.2: Test device acceleration availability
+print("\n2. Device Acceleration Status:")
+print(f"   CUDA Available: {torch.cuda.is_available()}")
+if torch.cuda.is_available():
+    print(f"   CUDA Device: {torch.cuda.get_device_name(0)}")
 print(f"   MPS Available: {torch.backends.mps.is_available()}")
 print(f"   MPS Built: {torch.backends.mps.is_built()}")
 
@@ -39,7 +43,7 @@ print("\n3. Create VisualFeatureExtractor Actor:")
 try:
     extractor = VisualFeatureExtractor.remote(
         model_name="mobilenet_v3_small",
-        use_mps=True
+        use_gpu=True
     )
 
     # Get device info
@@ -57,7 +61,7 @@ except Exception as e:
 print("\n4. Test Single Frame Feature Extraction:")
 try:
     # Get a test frame from preprocessed data
-    processed_dir = Path("data/processed/demo")
+    processed_dir = get_storage_path("processed/demo")
 
     # Find first video with frames
     test_frame = None
@@ -99,7 +103,7 @@ except Exception as e:
 print("\n5. Test Full Video Feature Extraction:")
 try:
     # Get first video directory
-    processed_dir = Path("data/processed/demo")
+    processed_dir = get_storage_path("processed/demo")
     video_dirs = [d for d in processed_dir.iterdir() if d.is_dir()]
 
     if not video_dirs:
@@ -120,7 +124,7 @@ try:
     print(f"   Test video: {test_video.name}")
 
     # Extract features
-    output_path = Path("data/features/demo") / f"{test_video.name}_features.npy"
+    output_path = get_storage_path("features/demo") / f"{test_video.name}_features.npy"
 
     start_time = time.time()
     result = ray.get(extractor.extract_video_features.remote(
@@ -170,7 +174,7 @@ try:
     tasks = []
     for i, video_dir in enumerate(video_dirs):
         actor = actors[i % num_actors]
-        output_path = Path("data/features/demo") / f"{video_dir.name}_features.npy"
+        output_path = get_storage_path("features/demo") / f"{video_dir.name}_features.npy"
 
         task = actor.extract_video_features.remote(
             video_dir=str(video_dir),
@@ -213,7 +217,7 @@ except Exception as e:
 # Test 4.7: Verify saved features
 print("\n7. Verify Saved Features:")
 try:
-    features_dir = Path("data/features/demo")
+    features_dir = get_storage_path("features/demo")
 
     if not features_dir.exists():
         print(f"   ❌ Features directory not found!")
@@ -254,7 +258,7 @@ print(f"Device: {device_info['device_type'].upper()}")
 print(f"Extracted features from {successful} videos")
 print(f"Total frames processed: {total_frames}")
 print(f"Performance: {total_frames/elapsed:.1f} FPS")
-print(f"\nFeatures saved to: data/features/demo/")
+print(f"\nFeatures saved to: {get_storage_path('features/demo')}")
 print(f"\nNext step: Implement highlight detection (Phase 5)")
 print("=" * 70 + "\n")
 

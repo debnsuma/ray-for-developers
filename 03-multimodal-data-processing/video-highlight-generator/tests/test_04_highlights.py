@@ -1,5 +1,5 @@
 """
-Test 5: Highlight Detection
+Test 4: Highlight Detection
 Test detection of interesting moments from visual features
 """
 import numpy as np
@@ -10,12 +10,13 @@ matplotlib.use('Agg')  # Use non-interactive backend
 import matplotlib.pyplot as plt
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent))
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from src.features.highlight_detector import HighlightDetector
+from src.utils.ray_utils import get_storage_path
 
 print("=" * 70)
-print("TEST 5: Highlight Detection")
+print("TEST 4: Highlight Detection")
 print("=" * 70)
 
 # Test 5.1: Initialize HighlightDetector
@@ -34,7 +35,7 @@ except Exception as e:
 # Test 5.2: Test on single video
 print("\n2. Test Highlight Detection on Single Video:")
 try:
-    features_dir = Path("data/features/demo")
+    features_dir = get_storage_path("features/demo")
 
     # Test on smallest video first
     test_features = None
@@ -71,7 +72,7 @@ except Exception as e:
 # Test 5.3: Test on all videos
 print("\n3. Test Highlight Detection on All Videos:")
 try:
-    features_dir = Path("data/features/demo")
+    features_dir = get_storage_path("features/demo")
     feature_files = list(features_dir.glob("*_features.npy"))
 
     print(f"   Found {len(feature_files)} feature files")
@@ -79,7 +80,7 @@ try:
     all_results = []
 
     for feature_file in sorted(feature_files):
-        output_path = Path("data/highlights/demo") / f"{feature_file.stem.replace('_features', '')}_highlights.json"
+        output_path = get_storage_path("highlights/demo") / f"{feature_file.stem.replace('_features', '')}_highlights.json"
 
         result = detector.detect_highlights(
             features_path=str(feature_file),
@@ -150,7 +151,7 @@ except Exception as e:
 # Test 5.5: Verify saved highlights
 print("\n5. Verify Saved Highlight Data:")
 try:
-    highlights_dir = Path("data/highlights/demo")
+    highlights_dir = get_storage_path("highlights/demo")
 
     json_files = list(highlights_dir.glob("*_highlights.json"))
     plot_files = list(highlights_dir.glob("*_importance_plot.png"))

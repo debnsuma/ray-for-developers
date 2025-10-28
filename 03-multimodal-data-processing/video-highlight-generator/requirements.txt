@@ -2,14 +2,15 @@
 # Python 3.12 required
 
 # Ray framework
-ray[default,data]==2.39.0
+ray[default,data]==2.47.0
 
 # PyTorch with MPS support (M4)
 torch==2.5.1
 torchvision==0.20.1
 
 # Video processing
-opencv-python==4.10.0.84
+# Use opencv-python-headless for cluster compatibility (no GUI dependencies)
+opencv-python-headless==4.10.0.84
 av==13.1.0
 
 # Audio processing

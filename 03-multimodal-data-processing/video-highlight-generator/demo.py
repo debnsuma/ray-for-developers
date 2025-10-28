@@ -22,6 +22,7 @@ import numpy as np
 sys.path.insert(0, str(Path(__file__).parent))
 
 from src.pipeline import VideoHighlightPipeline
+from src.utils.ray_utils import get_storage_path
 
 console = Console()
 
@@ -253,7 +254,7 @@ def download_youtube_video(url: str) -> tuple[str, str]:
         console.print("\n[bold bright_cyan]📥 Downloading YouTube video...[/bold bright_cyan]")
 
         # Create download directory
-        download_dir = Path("data/raw/youtube")
+        download_dir = get_storage_path("raw/youtube")
         download_dir.mkdir(parents=True, exist_ok=True)
 
         # Get video info first to check duration

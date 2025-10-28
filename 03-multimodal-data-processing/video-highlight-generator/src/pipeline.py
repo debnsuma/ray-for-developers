@@ -9,6 +9,7 @@ from typing import Dict, Optional, Callable
 import json
 import shutil
 
+from src.utils.ray_utils import safe_ray_init, get_storage_path
 from src.models.feature_extractors import create_feature_extractor_pool
 from src.features.highlight_detector import HighlightDetector
 from src.features.video_generator import VideoHighlightGenerator
@@ -76,12 +77,20 @@ class VideoHighlightPipeline:
             self.progress_callback(phase, message)
 
     def initialize_ray(self):
-        """Initialize Ray cluster"""
+        """Initialize Ray cluster (handles both local and cluster modes)"""
         if not self.ray_initialized:
             self._log("Initializing Ray...", "SETUP")
-            ray.init(num_cpus=4, ignore_reinit_error=True)
+            safe_ray_init(num_cpus=4)
             self.ray_initialized = True
-            self._log(f"Ray initialized with {ray.available_resources().get('CPU', 0):.0f} CPUs", "SETUP")
+
+            # Show available resources
+            resources = ray.available_resources()
+            cpu_count = resources.get('CPU', 0)
+            self._log(f"Ray initialized with {cpu_count:.0f} CPUs", "SETUP")
+
+            if 'GPU' in resources:
+                gpu_count = resources.get('GPU', 0)
+                self._log(f"GPUs available: {gpu_count:.0f}", "SETUP")
 
     def shutdown_ray(self):
         """Shutdown Ray cluster"""
@@ -115,7 +124,7 @@ class VideoHighlightPipeline:
         }
 
         # Set output directory temporarily
-        original_output = Path("data/processed/demo")
+        original_output = get_storage_path("processed/demo")
         custom_output = Path(output_dir)
 
         # Preprocess
@@ -276,7 +285,7 @@ class VideoHighlightPipeline:
         video_name = Path(video_path).stem
 
         if output_dir is None:
-            output_dir = f"data/pipeline/{video_name}"
+            output_dir = str(get_storage_path(f"pipeline/{video_name}"))
 
         output_path = Path(output_dir)
         output_path.mkdir(parents=True, exist_ok=True)
