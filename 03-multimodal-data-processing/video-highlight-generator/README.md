@@ -1,11 +1,8 @@
 # Video Highlight Generator
 
-> Automatically create short highlight reels from videos using Ray distributed computing and visual analysis
-
 ## Overview
 
-A production-ready system that automatically identifies and extracts the most interesting moments from videos. Uses Ray actors for distributed processing and MobileNetV3 for visual feature extraction.
-
+A system that utomatically create short highlight reels from videos using Ray distributed computing and visual analysis. It identifies and extracts the most interesting moments from videos. Uses Ray for distributed processing and `MobileNetV3` for visual feature extraction.
 
 ## Getting Started with Anyscale (Recommended)
 
