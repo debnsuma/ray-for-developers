@@ -6,19 +6,19 @@
 
 A production-ready system that automatically identifies and extracts the most interesting moments from videos. Uses Ray actors for distributed processing and MobileNetV3 for visual feature extraction.
 
-**Key Features:**
-- **Distributed Processing** - Ray actors for parallel video processing
-- **ML-Based Detection** - MobileNetV3 visual features + multi-signal analysis
-- **Cluster Compatible** - Runs on Mac, Linux, and Ray clusters without code changes
-- **Auto-Detection** - No manual parameter tuning required
-- **YouTube Support** - Process videos directly from URLs
 
-**Performance:**
-- 63+ FPS feature extraction on Ray cluster (Tesla T4 GPUs)
-- 15.1s end-to-end pipeline for 16-second video
-- Automatic cluster storage integration (`/mnt/cluster_storage`)
+## Getting Started with Anyscale (Recommended)
 
----
+The easiest way to get started is using Anyscale Platform, which provides a ready-to-use Ray cluster:
+
+1. **Create a free account** at [anyscale.com](https://console.anyscale.com/register/v2)
+2. **Create a workspace** - Your Ray cluster will be automatically provisioned and ready to use
+3. **Clone this repository** in your workspace
+4. **Start coding** - The cluster is already up and running with all necessary Ray resources
+
+This eliminates the need for local setup and gives you immediate access to GPU resources and distributed computing capabilities.
+
+**For local development**, continue with the Installation section below.
 
 ## Installation
 

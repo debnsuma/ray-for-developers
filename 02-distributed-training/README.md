@@ -11,6 +11,21 @@ This module teaches you **distributed training the right way** through a clear l
 
 ---
 
+## Getting Started with Anyscale (Recommended)
+
+The easiest way to get started is using Anyscale Platform, which provides a ready-to-use Ray cluster:
+
+1. **Create a free account** at [anyscale.com](https://console.anyscale.com/register/v2)
+2. **Create a workspace** - Your Ray cluster will be automatically provisioned and ready to use
+3. **Clone this repository** in your workspace
+4. **Start training** - The cluster is already up and running with GPUs and Ray resources
+
+This eliminates the need for local setup and gives you immediate access to multi-GPU distributed training capabilities.
+
+**For local development**, continue with the Installation section below.
+
+---
+
 ## 📊 Slide Deck
 
 **[→ View Slides: Distributed Training with Ray](https://www.canva.com/design/DAG2W25BKAw/yXl48lXeg0g60Rf_1RUXrw/view)**
