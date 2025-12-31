@@ -411,7 +411,7 @@ After completing this module, you'll:
 
 ## Additional Learning Resources (Notebooks)
 
-This module also includes comprehensive notebooks from Ray Summit training sessions:
+This module also includes additional learning notebooks:
 
 ### Core Notebooks (`notebooks/`)
 | Notebook | Description |
